@@ -1,0 +1,33 @@
+services:
+  app:
+    build:
+      context: ./webapp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+      - socket
+
+  socket:
+    build:
+      context: ./socket
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://root:example@mongo:27017/
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
